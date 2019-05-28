@@ -89,7 +89,7 @@ Following outputs are supported:
 |cuBERT_SEQUENCE_OUTPUT |`model.get_sequence_output()` |
 |cuBERT_EMBEDDING_OUTPUT|`model.get_embedding_output()`|
 
-# Build
+# Build from Source
 
 ```shell
 mkdir build && cd build
@@ -100,8 +100,12 @@ cmake -DCMAKE_BUILD_TYPE=Release -DcuBERT_ENABLE_MKL_SUPPORT=ON ..
 make -j4
 
 # install to /usr/local
+# it will also install MKL if -DcuBERT_ENABLE_MKL_SUPPORT=ON
 sudo make install
 ```
+
+If you would like to run tfBERT_benchmark for performance comparison,
+please first install tensorflow C API from https://www.tensorflow.org/install/lang_c.
 
 ### Run Unit Test
 
@@ -127,6 +131,36 @@ python cuBERT_test.py
 
 Please check the Python API usage and examples at [cuBERT_test.py](/python/cuBERT_test.py)	
 for more details.
+
+### Java
+
+Java wrapper is implemented through [JNA](https://github.com/java-native-access/jna)
+. After installing maven and C++ building, it can be built as follows:
+
+```shell
+cd java
+mvn clean package # -DskipTests
+```
+
+When using Java JAR, you need to specify `jna.library.path` to the 
+location of `libcuBERT.so` if it is not installed to the system path.
+And `jna.encoding` should be set to UTF8 as `-Djna.encoding=UTF8`
+in the JVM start-up script.
+
+Please check the Java API usage and example at [ModelTest.java](/java/src/test/java/com/zhihu/cubert/ModelTest.java)
+for more details.
+
+# Install
+
+Pre-built python binary package (currently only with MKL on Linux) can
+be installed as follows:
+
+* Download and install [MKL](https://github.com/intel/mkl-dnn/releases)
+to system path.
+
+* Download the wheel package and `pip install cuBERT-xxx-linux_x86_64.whl`
+
+* run `python -c 'import libcubert'` to verify your installation.
 
 # Dependency
 
