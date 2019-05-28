@@ -56,7 +56,6 @@ namespace cuBERT {
                           input, hidden_size,
                           beta,
                           output, num_labels);
-        void* streamId = blas_get_stream(handle);
     }
 
     template <typename T>
