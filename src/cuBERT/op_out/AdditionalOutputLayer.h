@@ -4,6 +4,9 @@
 
 #include <cstddef>
 
+
+#include "cuBERT/op/Softmax.h"
+
 namespace cuBERT {
 
     /**
@@ -46,6 +49,7 @@ namespace cuBERT {
         // cpu/gpu buffer
         T *output_weights;
         T *output_bias;
+        Softmax<T>* softmax;
     };
 }
 
