@@ -16,15 +16,8 @@ namespace cuBERT {
         
         std::cerr << "hidden_size:" << this->hidden_size << " num_labels:" << this->num_labels << std::endl;
 
-        if(output_weights != nullptr) {
-            this->output_weights = static_cast<T *>(cuBERT::malloc(sizeof(T) * hidden_size * num_labels * max_batch_size));
-            for (int i = 0; i < max_batch_size; ++i) {
-                cuBERT::memcpy(this->output_weights + num_labels * hidden_size * i, output_weights, num_labels * hidden_size * sizeof(T), 1);
-            }
-        }
-
-        //this->output_weights = static_cast<T *>(cuBERT::malloc(sizeof(T) * hidden_size));
-        //cuBERT::memcpy(this->output_weights, output_weights, sizeof(T) * hidden_size, 1);
+        this->output_weights = static_cast<T *>(cuBERT::malloc(sizeof(T) * hidden_size * this->num_labels));
+        cuBERT::memcpy(this->output_weights, output_weights, sizeof(T) * hidden_size * this->num_labels, 1);
 
         if (output_bias != nullptr) {
             this->output_bias = static_cast<T *>(cuBERT::malloc(sizeof(T) * num_labels * max_batch_size));
@@ -34,8 +27,6 @@ namespace cuBERT {
         } else {
             this->output_bias = nullptr;
         }
-
-        this->softmax = new Softmax<T>(max_batch_size, num_labels);
 
     }
 
@@ -66,7 +57,6 @@ namespace cuBERT {
                           beta,
                           output, num_labels);
         void* streamId = blas_get_stream(handle);
-        softmax->compute_(batch_size, output, streamId);
     }
 
     template <typename T>
